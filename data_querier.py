@@ -1,64 +1,12 @@
 
-import numpy as np
-import wrds
-import dask
 import pandas as pd
 import yfinance as yf
-import os
 import logging
-
+import wrds
 
 
 TABLE_NUM = 0
 STOCK_COLUMN = "Symbol"
-
-
-
-class DataQuerierWrds: 
-
-    def __init__ (self, company_permcos_name, dates, **kwargs): 
-        self.company_permcos_name = pd.Dataframe({"ticker": company_permcos_name})
-        self.dates = dates
-        self.db=wrds.Connection(wrds_username=kwargs["username"])
-        if (kwargs["first_connection"]):
-            self.db.create_pgpass_file()
-        self.__get_permcos()
-        self.futures = [self.__query_company(*params) for params in self.permcos]
-        os.environ["OMP_NUM_THREADS"] = "1"
-        
-
-        
-    
-    def __get_permcos(self):
-        try:
-            query_res = self.db.raw_sql("select  permco , ticker, namedt, nameenddt,comnam "
-                                "from crsp.stocknames "
-                                "where namedt <'2009-01-01' and nameenddt >'2009-01-01'")
-            self.permcos = query_res[["permco", "ticker"]].merge(self.company_permcos_name, on="ticker").values
-        finally:
-            self.db.close()
-
-
-
-
-    def __call__ (self):
-        return dask.compute(self.futures)
-        
-
-
-    @dask.delayed
-    def __query_company(self, permco, name):
-        params= {'permco': permco, 'low': self.dates[0], 'high': self.dates[1]}
-        stock=self.db.raw_sql("select * "
-           "from crsp.dsf "
-           "where permco in {permco} "
-           "and date >= {low}"
-            "and date <= {high}", params=params)
-        stock["ret"] = np.log(stock["ret"] + 1) #get gross return
-        stock=stock.rename(index=stock["date"], columns={"ret": name})
-        return stock
-
-
 
 
 
@@ -97,7 +45,7 @@ class DataQuerierYF:
                                         tickers = self.company_list,
                                         **kwargs
                                     )
-        else: 
+        else:
             self.stock_hist = yf.download(  
                                         tickers = self.company_list,
                                         **self.cfg.params
@@ -106,3 +54,37 @@ class DataQuerierYF:
 
 
         
+class SharesOutStandingQuerier: 
+
+    def __init__ (self, company_permcos_name, dates, first_connection=False, username="ghandri", **kwargs): 
+        self.company_permcos_name = pd.DataFrame({"ticker": company_permcos_name})
+        self.dates = dates
+        self.db=wrds.Connection(wrds_username=username)
+        if (first_connection):
+            self.db.create_pgpass_file()
+        self.__get_permcos()
+        print(self.permcos)
+        self.__query_company()
+        self.db.close()
+
+        
+    
+    def __get_permcos(self):
+            query_res = self.db.raw_sql("select  permco , ticker, namedt, nameenddt,comnam "
+                                "from crsp.stocknames "
+                                "where namedt <'2009-01-01' and nameenddt >'2009-01-01'")
+            self.permcos = query_res[["permco", "ticker"]].merge(self.company_permcos_name, on="ticker")
+
+        
+    def __call__(self):
+        return 
+
+
+    def __query_company(self,):
+        params= {'permco': tuple(self.permcos["permco"]), 'low': self.dates[0], 'high': self.dates[1]}
+        self.sharesout =self.db.raw_sql("select date,permco,shrout "
+           "from crsp.dsf "
+           "where permco in {permco} "
+           "and date >= '{low}'"
+            "and date <= '{high}'".format(**params))
+        return self.sharesout

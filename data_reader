@@ -1,0 +1,61 @@
+import torch
+import dask
+import os
+import pandas as pd
+from utils import DataModes
+
+
+
+
+
+
+
+
+
+class StockMarket(Dataset):
+    
+    #Dataset class to be used for training and evaluating results intermittently.
+    
+    def __init__(self, cfg, mode):  
+        self.cfg = cfg  
+        assert(isinstance(mode, DataModes))
+        self.mode = mode
+        self.data = self.load_data(cfg, mode)
+
+    def __len__(self):
+        if (self.mode == DataModes.TRAINING):
+            return self._size_train
+        if(self.mode == DataModes.VALIDATION):
+            return  self._size_val
+        else: 
+            raise NotImplementedError("No mode other than train and val for this generator ")
+
+
+    def __getitem__(self, idx):
+        pass
+        
+
+    def load_data(self, cfg, mode):
+        for f in os.listdir(self.cfg.data_dir):
+            yield dask.dataframe.read_parquet
+
+
+        
+
+    def preprocess(self, data):
+        return data[None, :] / data.max()
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
