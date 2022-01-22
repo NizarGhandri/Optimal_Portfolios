@@ -39,7 +39,7 @@ def load_config():
        'HD', 'BK', 'HON', 'CVX', 'NSC', 'MON', 'TXN', 'AEP', 'AVP', 'JPM',
        'BAC', 'MRK', 'XRX', 'TGT', 'XOM', 'PFE', 'UPS', 'AXP', 'APA']
 
-    cfg.dates = ("2012-01-01", "2022-01-01")
+    cfg.dates = ("2012-01-01", "2021-01-01")
 
     cfg.link = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
     cfg.params = {"start": cfg.dates[0], "end": cfg.dates[1], "group_by" : 'column', "auto_adjust" : True,  "prepost" : True, "threads" : True, "proxy" : None}

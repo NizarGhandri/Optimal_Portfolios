@@ -1,5 +1,9 @@
 import os
 import pandas as pd
+from data_querier import SharesOutStandingQuerier
+import logging 
+from functools import reduce
+
 
 
 
@@ -19,6 +23,7 @@ class MarketWeighted():
     def __init__(self, cfg):  
         self.cfg = cfg  
         self.data = self.load_data()
+        self.sharesout = SharesOutStandingQuerier(self.data.columns, ("2012-01-01", "2021-12-31"), username="ghandri")
 
 
     def load_data(self):
@@ -29,11 +34,21 @@ class MarketWeighted():
         dropped = set(x.columns) - set(tmp.columns) 
         logging.info("Preprocessing dropped the following stocks %s ".format(["-".join(list(dropped))]))
         return tmp
-        #return x
 
     def __call__(self):
-        #self.data = dataframe.from_pandas(self.data, npartitions=os.cpu_count())
-        return ((self.data.diff()/self.data) + 1).tail(-1).cumprod()#.mean(axis=1)
+        weights = self.compute_weights()
+        returns = ((self.data.diff()/self.data) + 1)[weights.columns] * weights
+        return returns.tail(-1).sum(axis=1).cumprod()
+    def compute_weights(self):
+        mapper = map(lambda x: x[1].drop(columns=["ticker"]).set_index("date").rename(columns={"shrout":x[0]}),
+               filter(lambda x: len(x[1]) == self.data.shape[0], # some are missing certain dates 
+               self.sharesout.sharesout.merge(self.sharesout.permcos, on="permco").drop(columns=["permco"]).groupby(["ticker"]).__iter__()))
+
+        reducer = reduce(lambda x, y: x.merge(y, left_index=True, right_index=True), mapper) * self.data
+        return reducer.div(reducer.sum(axis=1), axis=0) 
+        
+
+
 
 
      
