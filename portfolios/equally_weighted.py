@@ -29,7 +29,7 @@ class EquallyWeighted():
 
     def __call__(self):
         #self.data = dataframe.from_pandas(self.data, npartitions=os.cpu_count())
-        return ((self.data.diff()/self.data) + 1).tail(-1).cumprod().mean(axis=1)
+        return ((self.data.diff()/self.data) + 1).fillna(1).cumprod().mean(axis=1)
 
 
     
