@@ -20,6 +20,12 @@ Here we find the executable scripts to run the different asset allocation models
 - market_weights.py
 - mean_variance.py
 
-### reinforcement_learning folder:
+#### reinforcement_learning folder:
 - agent.py
 - environment.py
+
+## config.py
+This file contains the configuration attributes used during preprocessing and training.
+
+## data_querier.py
+This file contains the methods to query our data from Yahoo Finance.
