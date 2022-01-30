@@ -1,5 +1,12 @@
-# optimal_portfolios
-Investigating multiple ways to build optimal portfolios relying mainly on big data analysis
+# A Comparative Analysis of Different Asset Allocation Techniques
+This repository is for the final project for the EPFL's Financial Big Data class.
+In this project we investigate multiple ways to build optimal portfolios relying mainly on big data analysis.
+
+## Group Members:
+- Ana Lucia Carrizo Delgado, Msc. Data Science
+- Nizar Ghandri, Msc. Data Science
+
+## Due date: 30th of January of 2022
 
 ##  execution.ipynb
 In this notebook we find the performance of the equally weighted portfolio and the value weighted portfolio. 
