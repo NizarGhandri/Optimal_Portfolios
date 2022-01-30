@@ -6,7 +6,7 @@ In this project we investigate multiple ways to build optimal portfolios relying
 - Ana Lucia Carrizo Delgado, Msc. Data Science
 - Nizar Ghandri, Msc. Data Science
 
-## Due date: 30th of January of 2022
+## Due date: 31st of January of 2022
 
 ##  execution.ipynb
 In this notebook we find the performance of the equally weighted portfolio and the value weighted portfolio. 
