@@ -27,7 +27,6 @@ Here we find the executable scripts to run the different asset allocation models
  - ActorCritic:  
   - agent.py
   - environment.py
- 
 
 ## config.py
 This file contains the configuration attributes used during preprocessing and training.
