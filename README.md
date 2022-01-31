@@ -8,8 +8,8 @@ In this project we investigate multiple ways to build optimal portfolios relying
 
 ## Due date: 31st of January of 2022
 
-##  execution.ipynb
-In this notebook we find the performance of the equally weighted portfolio and the value weighted portfolio. 
+##  execution_reinforcement_learning.ipynb
+In this notebook we find the performance of the equally weighted portfolio and the value weighted portfolio and the reinforcement learning methods. 
 
 ## execute_mean_varaince.ipynb 
 In this notebook we detail the process to computing the tangency portfolio using a rolling window and filtered and unfiltered covariance matrices.
@@ -21,8 +21,13 @@ Here we find the executable scripts to run the different asset allocation models
 - mean_variance.py
 
 #### reinforcement_learning folder:
-- agent.py
-- environment.py
+- DQN:  
+  - agent.py
+  - environment.py
+ - ActorCritic:  
+  - agent.py
+  - environment.py
+ 
 
 ## config.py
 This file contains the configuration attributes used during preprocessing and training.
