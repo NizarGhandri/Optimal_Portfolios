@@ -37,8 +37,8 @@ class MarketWeighted():
 
     def __call__(self):
         weights = self.compute_weights()
-        returns = ((self.data.diff()/self.data) + 1)[weights.columns] * weights
-        return returns.fillna(1).sum(axis=1).cumprod()
+        returns = ((self.data.diff()/self.data) + 1)[weights.columns].fillna(1) * weights
+        return returns.sum(axis=1).cumprod()
 
     def compute_weights(self):
         mapper = map(lambda x: x[1].drop(columns=["ticker"]).set_index("date").rename(columns={"shrout":x[0]}),

@@ -4,6 +4,7 @@
 import numpy as np
 import os
 from datetime import datetime
+from torch.cuda import is_available
 
 
 
@@ -29,6 +30,7 @@ def load_config():
     ************************************************************************************************
     """ 
 
+    cfg.device = "cuda" if is_available() else "cpu"
 
     cfg.companies = ['DOW', 'PEP', 'CVS', 'UNH', 'CL', 'DD', 'EXC', 'SLB', 'FDX', 'AA',
        'NKE', 'JNJ', 'VZ', 'BAX', 'GD', 'WMT', 'RTN', 'WY', 'LMT', 'BHI',
@@ -40,6 +42,7 @@ def load_config():
        'BAC', 'MRK', 'XRX', 'TGT', 'XOM', 'PFE', 'UPS', 'AXP', 'APA']
 
     cfg.dates = ("2012-01-01", "2021-01-01")
+    cfg.test_size = 100
 
     cfg.link = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
     cfg.params = {"start": cfg.dates[0], "end": cfg.dates[1], "group_by" : 'column', "auto_adjust" : True,  "prepost" : True, "threads" : True, "proxy" : None}
